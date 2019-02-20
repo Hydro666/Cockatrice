@@ -36,8 +36,8 @@ private:
     Player *mulliganPlayer;
     MessageContext currentContext;
     QList<LogMoveCard> moveCardQueue;
-    QMap<CardItem *, QString> moveCardPT;
     QMap<CardItem *, bool> moveCardTapped;
+    QList<QString> moveCardExtras;
 
     const QString tableConstant() const;
     const QString graveyardConstant() const;
@@ -48,7 +48,7 @@ private:
     const QString stackConstant() const;
 
     QString sanitizeHtml(QString dirty) const;
-    QString cardLink(const QString cardName) const;
+    QString cardLink(QString cardName) const;
     QPair<QString, QString> getFromStr(CardZone *zone, QString cardName, int position, bool ownerChange) const;
 
 public slots:
@@ -57,6 +57,7 @@ public slots:
     void logAlwaysRevealTopCard(Player *player, CardZone *zone, bool reveal);
     void logAttachCard(Player *player, QString cardName, Player *targetPlayer, QString targetCardName);
     void logConcede(Player *player);
+    void logUnconcede(Player *player);
     void logConnectionStateChanged(Player *player, bool connectionState);
     void logCreateArrow(Player *player,
                         Player *startPlayer,
@@ -83,8 +84,13 @@ public slots:
     void logMulligan(Player *player, int number);
     void logReplayStarted(int gameId);
     void logReadyStart(Player *player);
-    void
-    logRevealCards(Player *player, CardZone *zone, int cardId, QString cardName, Player *otherPlayer, bool faceDown);
+    void logRevealCards(Player *player,
+                        CardZone *zone,
+                        int cardId,
+                        QString cardName,
+                        Player *otherPlayer,
+                        bool faceDown,
+                        int amount);
     void logRollDie(Player *player, int sides, int roll);
     void logSay(Player *player, QString message);
     void logSetActivePhase(int phase);
@@ -96,7 +102,7 @@ public slots:
     void logSetPT(Player *player, CardItem *card, QString newPT);
     void logSetSideboardLock(Player *player, bool locked);
     void logSetTapped(Player *player, CardItem *card, bool tapped);
-    void logShuffle(Player *player, CardZone *zone);
+    void logShuffle(Player *player, CardZone *zone, int start, int end);
     void
     logSpectatorSay(QString spectatorName, UserLevelFlags spectatorUserLevel, QString userPrivLevel, QString message);
     void logStopDumpZone(Player *player, CardZone *zone);
@@ -108,7 +114,7 @@ public:
     MessageLogWidget(const TabSupervisor *_tabSupervisor,
                      const UserlistProxy *_userlistProxy,
                      TabGame *_game,
-                     QWidget *parent = 0);
+                     QWidget *parent = nullptr);
 };
 
 #endif

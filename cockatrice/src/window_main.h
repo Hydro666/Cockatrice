@@ -48,6 +48,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 public slots:
     void actCheckCardUpdates();
+    void actCheckServerUpdates();
 private slots:
     void updateTabMenu(const QList<QMenu *> &newMenuList);
     void statusChanged(ClientStatus _status);
@@ -101,6 +102,8 @@ private slots:
     void actManageSets();
     void actEditTokens();
 
+    void alertForcedOracleRun(const QString &);
+
 private:
     static const QString appName;
     static const QStringList fileNameFilters;
@@ -135,15 +138,33 @@ private:
     DlgConnect *dlgConnect;
     GameReplay *replay;
     DlgTipOfTheDay *tip;
+    QUrl connectTo;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+    void setConnectTo(QString url)
+    {
+        connectTo = QUrl(QString("cockatrice://%1").arg(url));
+    }
     ~MainWindow() override;
 
 protected:
     void closeEvent(QCloseEvent *event) override;
     void changeEvent(QEvent *event) override;
     QString extractInvalidUsernameMessage(QString &in);
+};
+
+class MainUpdateHelper : public QObject
+{
+    Q_OBJECT
+
+signals:
+    void newVersionDetected(QString);
+
+public:
+    explicit MainUpdateHelper() = default;
+    ~MainUpdateHelper() override = default;
+    void testForNewVersion();
 };
 
 #endif

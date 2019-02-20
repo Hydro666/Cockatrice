@@ -46,6 +46,7 @@ class Command_SetCardCounter;
 class Command_IncCardCounter;
 class Command_ReadyStart;
 class Command_Concede;
+class Command_Unconcede;
 class Command_IncCounter;
 class Command_CreateCounter;
 class Command_SetCounter;
@@ -89,7 +90,7 @@ public:
                   const ServerInfo_User &_userInfo,
                   bool _spectator,
                   Server_AbstractUserInterface *_handler);
-    ~Server_Player();
+    ~Server_Player() override;
     void prepareDestroy();
     Server_AbstractUserInterface *getUserInterface() const
     {
@@ -98,10 +99,6 @@ public:
     void setUserInterface(Server_AbstractUserInterface *_userInterface);
     void disconnectClient();
 
-    void setPlayerId(int _id)
-    {
-        playerId = _id;
-    }
     bool getReadyStart() const
     {
         return readyStart;
@@ -126,10 +123,7 @@ public:
     {
         conceded = _conceded;
     }
-    DeckList *getDeck() const
-    {
-        return deck;
-    }
+
     Server_Game *getGame() const
     {
         return game;
@@ -190,6 +184,7 @@ public:
     Response::ResponseCode
     cmdKickFromGame(const Command_KickFromGame &cmd, ResponseContainer &rc, GameEventStorage &ges);
     Response::ResponseCode cmdConcede(const Command_Concede &cmd, ResponseContainer &rc, GameEventStorage &ges);
+    Response::ResponseCode cmdUnconcede(const Command_Unconcede &cmd, ResponseContainer &rc, GameEventStorage &ges);
     Response::ResponseCode cmdReadyStart(const Command_ReadyStart &cmd, ResponseContainer &rc, GameEventStorage &ges);
     Response::ResponseCode cmdDeckSelect(const Command_DeckSelect &cmd, ResponseContainer &rc, GameEventStorage &ges);
     Response::ResponseCode
